@@ -24,6 +24,20 @@ var requestHandler = function(request, response) {
     HINT: Explore the list of MIME Types
     https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
    */
+  if (parsedUrl.path === '/')
+  {
+    response.write('Hello World');
+    response.end();
+  }
+  if (request.method === "GET" && parsedUrl.path === '/listings')
+  {
+    response.listingData;
+    response.end();
+  }
+  else
+  {
+    response.statusCode = 404;
+  }
 };
 
 fs.readFile('listings.json', 'utf8', function(err, data) {
@@ -36,7 +50,20 @@ fs.readFile('listings.json', 'utf8', function(err, data) {
 
     HINT: Read up on JSON parsing Node.js
    */
-
+  if (err)
+  {
+    console.error(err);
+    return;
+  }
+  try
+  {
+    listingData = JSON.parse(data);
+  }
+  catch
+  {
+    console.error(err);
+  }
+   
     //Check for errors
   
 
@@ -44,8 +71,10 @@ fs.readFile('listings.json', 'utf8', function(err, data) {
   
 
   //Creates the server
-  
+  server = http.createServer(requestHandler);
   //Start the server
-
+  server.listen(port, function() {
+    console.log('server listening on: http://localhost:' + port);
+  });
 
 });
