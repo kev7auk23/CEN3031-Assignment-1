@@ -24,19 +24,20 @@ var requestHandler = function(request, response) {
     HINT: Explore the list of MIME Types
     https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
    */
-  if (parsedUrl.path === '/')
+  /*if (parsedUrl.path === '/')
   {
     response.write('Hello World');
     response.end();
-  }
-  if (request.method === "GET" && parsedUrl.path === '/listings')
+  }*/
+  if (parsedUrl.path === '/listings')
   {
-    response.listingData;
-    response.end();
+    response.writeHead(200, {'Content-Type': 'application/json'});
+    response.end(JSON.stringify(listingData));
   }
   else
   {
     response.statusCode = 404;
+    response.end('Bad gateway error');
   }
 };
 
