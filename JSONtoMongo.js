@@ -6,13 +6,14 @@
 var fs = require('fs'),
     mongoose = require('mongoose'), 
     Schema = mongoose.Schema, 
-    Listing = require('./ListingSchema.js'), 
+    Listing = require('./ListingSchema'), 
     config = require('./config');
 
 /* Connect to your database using mongoose - remember to keep your key secret*/
 //see https://mongoosejs.com/docs/connections.html
 //See https://docs.atlas.mongodb.com/driver-connection/
-
+mongoose.connect(config.db.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  
 /* 
   Instantiate a mongoose model for each listing object in the JSON file, 
   and then save it to your Mongo database 
@@ -20,6 +21,31 @@ var fs = require('fs'),
 
   Remember that we needed to read in a file like we did in Bootcamp Assignment #1.
  */
+var listingData;
+fs.readFile('listings.json', 'utf8', function(err, data) {
+  if (err)
+  {
+    console.error(err);
+    return;
+  }
+  try
+  {
+    listingData = JSON.parse(data);
+  }
+  catch
+  {
+    console.error(err);
+  }
+  for (var i = 0; i < listingData.entries.length; i++)
+  {
+    new Listing(listingData.entries[i]).save(function(err){
+      if (err) throw err;
+
+    });
+  }
+});
+
+
 
 
 /*  
